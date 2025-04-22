@@ -2,10 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: url-shortener
-  labels:
-    app: url-shortener
 spec:
-  replicas: 3  # Running multiple instances for high availability
+  replicas: 3
   selector:
     matchLabels:
       app: url-shortener
@@ -15,20 +13,19 @@ spec:
         app: url-shortener
     spec:
       containers:
-      - name: url-shortner
-        image: cc_project-flask:latest
-        imagePullPolicy: IfNotPresent  # Use local image
-        ports:
-        - containerPort: 8080
-        env:
-        - name: REDIS_HOST
-          value: "redis-service"
-        - name: REDIS_PORT
-          value: "6379"
-        resources:
-          limits:
-            cpu: "0.5"
-            memory: "256Mi"
-          requests:
-            cpu: "0.2"
-            memory: "128Mi"
+        - name: url-shortener
+          image: url-shortener:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: url-config
+            - secretRef:
+                name: redis-secret
+          resources:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "250m"
+
