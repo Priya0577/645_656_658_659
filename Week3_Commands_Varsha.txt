@@ -1,0 +1,65 @@
+﻿Commands to run while presenting Week 3: 
+
+
+minikube start
+
+
+minikube addons enable metrics-server
+kubectl apply -f hpa.yaml
+kubectl get pods -n kube-system
+kubectl get hpa
+
+
+minikube addons enable ingress
+kubectl apply -f ingress.yaml
+kubectl get pods -n ingress-nginx
+kubectl get ingress
+
+
+docker-compose up --build
+
+
+Now, in a separate terminal : 
+
+
+
+
+curl -X POST -H "Content-Type: application/json" \
+    -d '{"long_url":"https://docs.google.com/document/d/1STM1P4UGhUJ_fRjMjFNQAB85kDdbsh7E/edit"}' \
+    http://localhost:5000/shorten
+
+
+(the above command is just a dry test to see if the urls are being shortened correctly)
+
+
+
+
+ab -n 1000 -c 100 -p postdata.json -T 'https://docs.google.com/document/d/1STM1P4UGhUJ_fRjMjFNQAB85kDdbsh7E/edit' http://localhost:5000/shorten
+
+
+(this is used for strength testing)
+
+
+
+
+Potential errors : 
+
+
+1. kubectl fails : 
+
+
+minikube delete
+minikube start
+
+
+If the above commands do not work then try : 
+
+
+docker system prune -a --volumes
+minikube delete
+minikube start --driver=docker
+
+
+
+
+Note : You can replace the drive link with any link of your choice
